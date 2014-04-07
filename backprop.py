@@ -20,8 +20,8 @@ def printConnections(n):
 ds = SupervisedDataSet(8,8)
 
 '''
-Open the data in the csv. Each row is one trial, each column and input/output. 
-The first 8 are inputs, second 8 outputs as defined by the above data object.
+Open the data in the csv. Each row is one trial, each column is input or output (depending on network. 
+For this network, the first 8 columns are inputs, second 8 outputs as defined by the above data object.
 '''
 tf = open('my_file.csv','r')
 
