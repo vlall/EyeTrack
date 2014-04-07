@@ -3,10 +3,12 @@ from pybrain.utilities           import percentError
 from pybrain.tools.shortcuts     import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules   import SoftmaxLayer
-from pybrain.datasets 			 import SupervisedDataSet
+from pybrain.datasets 			        import SupervisedDataSet
  
-
-# Detailed metowrk topology, weights, connections- examined later.
+'''
+Detailed metowrk topology, weights, connections- examined later.
+this function just prints our final data. Move to separate file later.
+'''
 def printConnections(n):
     for mod in n.modules:
         for conn in n.connections[mod]:
@@ -32,9 +34,11 @@ for line in tf.readlines():
 
 '''
 Make the actual neural networks
-TOPOLOGY: 8 in, 8 hidden-0, 8 hidden-1, 8 out
+TOPOLOGY: 8 in, 8 hidden-0, 8 hidden-1, 8 out. Hidden layers subject to change
 '''
 n = buildNetwork(ds.indim,8,8,ds.outdim,recurrent=True)
+
+#change learningrate based on gradient
 t = BackpropTrainer(n,learningrate=0.01,momentum=0.5,verbose=True)
 
 # 100 iterations
