@@ -3,7 +3,7 @@ from pybrain.utilities           import percentError
 from pybrain.tools.shortcuts     import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules   import SoftmaxLayer
-from pybrain.datasets 	     import SupervisedDataSet
+from pybrain.datasets 	          import SupervisedDataSet
  
 '''
 Detailed metowrk topology, weights, connections- examined later.
