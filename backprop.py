@@ -3,7 +3,7 @@ from pybrain.utilities           import percentError
 from pybrain.tools.shortcuts     import buildNetwork
 from pybrain.supervised.trainers import BackpropTrainer
 from pybrain.structure.modules   import SoftmaxLayer
-from pybrain.datasets 	import SupervisedDataSet
+from pybrain.datasets 	     import SupervisedDataSet
  
 '''
 Detailed metowrk topology, weights, connections- examined later.
@@ -47,11 +47,10 @@ t.testOnData(verbose=True)
 
 # Our prediction given 8 inputs, will print 8 estimated outputs
 guess = n.activate((1,2,3,4,5,6,7,8)) 
-
 print 'Final weights:',n.params
 
 # Print our Guess 
 print '\nGUESS???' + str(guess)
-print (printConnections(n))
 
 #print n['in'], n['out'], n[h0], n['h1']
+print (printConnections(n))
