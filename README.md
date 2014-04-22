@@ -8,3 +8,6 @@ EyeTrack relies on EyeTracker data provided by a device (camera/sensors/software
 
 ###Methods
 Currently using backpropagation neural networks with a topology subject to many changes. The network is currently basic and processes mock data provided from csv random functions. The actual data may require separate networks for each of the processess. I would imagine scene processing would require a higher complexity of topology vs a face network, due to extensive variables when we process scenes. 
+
+###Separate Netowrks
+1) FixationClassifer contains x and y coordinates of 24 fixations of each scene, objects, or face. The network then classifies based on the training data.
