@@ -11,3 +11,5 @@ Currently using backpropagation neural networks with a topology subject to many 
 
 ###Separate Netowrks
 1) FixationClassifer contains x and y coordinates of 24 fixations of each scene, objects, or face. The network then classifies based on the training data.
+
+2) VectorClassifer contains a black and white 100x100 image vector that we can use as input to classify object, scenes, and faces (other classes include: manipulable v non-manipulable objects, male v female face, indoor v outdoor scene)
