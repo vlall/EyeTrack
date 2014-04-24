@@ -3,30 +3,36 @@ import xlrd
 book = xlrd.open_workbook("new.xlsx")
 first_sheet = book.sheet_by_index(0)
 
+'''
+Example cell value we can use:
 cell_value = first_sheet.cell(0,1).value
-cell_value2 = first_sheet.cell(3,18).value
-cell_value3 = first_sheet.cell(3,30).value
-cell_value4= first_sheet.cell(5,200).value
-
-# 0,1= Pic001a
-# 1,1 is indoor4.png
-
-#Nest the list in an outter list to keep all arrays managable
+(0,1) is Pic001a
+(1,1) is indoor4.png
+'''
+# Nest the list in an outter list to keep all arrays managable
 listoutter=[]
 listinner=[]
 listoutter.append(listinner)
+# Starting point for image name (indoor4.png)
 x=1 
 y=1
 
-#X coordinate starting cell
+# Starting poit for X-coordinate starting cell
 a=8
 b=1
 
-listinner.append(first_sheet.cell(a,b).value) #first_sheet.cell(x,y).value
-while (first_sheet.cell(x,y).value == first_sheet.cell(x,y+1).value):
-	listinner.append(first_sheet.cell(a,b).value)
-	y+=1
-	b+=1
+# Loop through and make a 2-d array (x values for each image)
+for i in range(3):
+	listinner = listoutter[i]
+	listinner.append(first_sheet.cell(a,b).value) #first_sheet.cell(x,y).value
+	while (first_sheet.cell(x,y).value == first_sheet.cell(x,y+1).value):
+		listinner.append(first_sheet.cell(a,b+1).value)
+		y+=1
+		b+=1
+	else:
+		listoutter.append([])
+		y+=1
+		b+=1
 
 #print (cell_value)
 print (listoutter)
