@@ -1,0 +1,28 @@
+import xlrd
+
+#Also works with xls
+book = xlrd.open_workbook("new.xlsx")
+first_sheet = book.sheet_by_index(0)
+
+cell_value = first_sheet.cell(0,1).value
+cell_value2 = first_sheet.cell(3,18).value
+cell_value3 = first_sheet.cell(3,30).value
+cell_value4= first_sheet.cell(5,200).value
+
+#Start is 0,1= Pic001a. count if
+# 1,1 is indoor4.png
+
+listoutter=[]
+listinner=[]
+listoutter.append(listinner)
+x=1 
+y=1
+a=0
+b=0
+
+listinner.append(first_sheet.cell(x,y).value) #first_sheet.cell(x,y).value
+if (first_sheet.cell(x,y).value == first_sheet.cell(x,y+1).value):
+	listinner.append(first_sheet.cell(x,y).value)
+
+#print (cell_value)
+print (listoutter)
