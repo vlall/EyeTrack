@@ -31,8 +31,20 @@ for i in range(3):
 		b+=1
 	else:
 		listoutter.append([])
+		print(len(listinner))
 		y+=1
 		b+=1
 
-#print (cell_value)
+# Print (cell_value)
 print (listoutter)
+
+# Extend lists to contain the length of the max list. Add 0's to make up for the extra space.
+maxLen = max(map(len, listoutter))
+for row in listoutter:
+    if len(row) < maxLen:
+        row.extend([0 for z in xrange((maxLen) - len(row))])
+
+# Print nested lists' lengths.
+print (listoutter)
+for j in range (len(listoutter)):
+	print len(listoutter[j])
