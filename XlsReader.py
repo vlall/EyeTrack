@@ -1,4 +1,7 @@
 import xlrd
+import xlwt
+import itertools
+
 
 book = xlrd.open_workbook("new.xlsx")
 first_sheet = book.sheet_by_index(0)
@@ -27,7 +30,6 @@ d=1
 e=6
 f=1
 
-
 # Loop through and make a 2-d array (x values for each image)
 for i in range(3):
 	listinner = listoutter[i]
@@ -35,12 +37,10 @@ for i in range(3):
 	listinner.append(first_sheet.cell(c,d).value) #first_sheet.cell(x,y).value
 	listinner.append(first_sheet.cell(e,f).value) #first_sheet.cell(x,y).value
 
-
 	while (first_sheet.cell(x,y).value == first_sheet.cell(x,y+1).value):
 		listinner.append(first_sheet.cell(a,b+1).value)
 		listinner.append(first_sheet.cell(c,d+1).value)
 		listinner.append(first_sheet.cell(e,f+1).value) #first_sheet.cell(x,y).value
-
 		y+=1
 		b+=1
 		d+=1
@@ -53,7 +53,6 @@ for i in range(3):
 		b+=1
 		d+=1
 		f+=1
-
 
 # Print (cell_value)
 print (listoutter)
@@ -69,6 +68,28 @@ print (listoutter)
 for j in range (len(listoutter)):
 	print len(listoutter[j])
 
+
+# Section for writing to a new excel file.
+row = 1
+wb = xlwt.Workbook()
+ws = wb.add_sheet('Sheet')
+'''
+ws.write(row, 0, 'asdf')
+ws.write(row, 1, 'asdf')
+ws.write(row, 2, 'asdf')
+ws.write(row, 3, 'asdf')
+ws.write(row, 4, 'asdf')
+ws.write(row, 5, 'asdf')
+ws.write(row, 6, 'asdf')
+row = row + 1
+'''
+
+singleList = list(itertools.chain(*listoutter))
+
+for v in range (len(singleList)-1):
+	#no more than 256 columns allowed for xls, so use xlsb or Openpyxcel
+	ws.write(v, 0, str(singleList[v]))
+wb.save('new346' + '.xls')
 
 # Print nested lists' lengths.
 print (listoutter)
