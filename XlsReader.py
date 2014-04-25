@@ -1,7 +1,12 @@
+import xlrd
+import xlwt
+import itertools
+
 '''
+Average Runtime: 1 minute.
+
 This script will utilize PyExcel to read xls(x) Eyetracker data.
 We will read the data and save it as a list within a list:
-
 [outterlist [innerlist1],[innerlist2],........[innerlistN] ]
 
 Our neural networks need a vector, but our information is in 3-Dimensions:
@@ -11,7 +16,7 @@ therefore we convert the matrix:
 [ x2 y2 t2 ]
 [ x3 y3 t3 ]
 
-into a column vector:
+Into a column vector:
 [ x1 ]
 [ y1 ]
 [ t1 ]
@@ -33,13 +38,12 @@ reorganize and reformat the original data so that it can be read by BackProp.py,
 our PyBrain NN creator.
 
 Please read BackProp.py to find the application of this script in an NN.
-
+Quick info about BackProp.py:
+I expect the NN to take this and output a classification of WHO is looking at a given
+image using our fixation data. I'll try this with Subject A and Subject B first.
 TODO:
 1) The final value is not printed in the loop (minor)
 '''
-import xlrd
-import xlwt
-import itertools
 
 book = xlrd.open_workbook("new.xlsx")
 first_sheet = book.sheet_by_index(0)
@@ -109,9 +113,13 @@ for row in listoutter:
     if len(row) < maxLen:
         row.extend([0 for z in xrange((maxLen) - len(row))])
 
+# This is important to know, it will tell us the amount of inputs we will use in the NN.
+# Once we know this, we will work on a topolopy in BackProp.py
+print(maxLen)
+
 '''
-OLD METHOD,
-COMMENT OUT-
+OLD METHOD, COMMENT OUT- 
+I'm only leaving this in here because it might at some point becomes useful.
 This was used to make multiple inner lists into a single list:
 -----------------------------------------------
 singleList = list(itertools.chain(*listoutter))
