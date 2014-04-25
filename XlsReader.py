@@ -1,3 +1,42 @@
+'''
+This script will utilize PyExcel to read xls(x) Eyetracker data.
+We will read the data and save it as a list within a list:
+
+[outterlist [innerlist1],[innerlist2],........[innerlistN] ]
+
+Our neural networks need a vector, but our information is in 3-Dimensions:
+(x-fixation, y-fixation, duration of fixation or-> x,y,t)
+therefore we convert the matrix:
+[ x1 y1 t1 ]
+[ x2 y2 t2 ]
+[ x3 y3 t3 ]
+
+into a column vector:
+[ x1 ]
+[ y1 ]
+[ t1 ]
+[ x2 ]
+[ y2 ]
+[ t2 ]
+[ x3 ]
+[ y3 ]
+[ t3 ]
+
+Our NN not only requires 1-dimenesional data, it also needs an EQUAL amount of outputs 
+for every training set. To do this, we will then find the maximum length of a given
+list and replace the lists that do not meet this max with zeros. This will result
+in an equal amount of outputs.
+
+-----------------------------------
+After reading the data, we will create a new xls(x) spreadsheet that will 
+reorganize and reformat the original data so that it can be read by BackProp.py,
+our PyBrain NN creator.
+
+Please read BackProp.py to find the application of this script in an NN.
+
+TODO:
+1) The final value is not printed in the loop (minor)
+'''
 import xlrd
 import xlwt
 import itertools
@@ -27,13 +66,13 @@ listoutter.append(listinner)
 # Starting point for image name (indoor4.png)
 x=1 
 y=1
-# Starting poit for x-coordinate starting cell
+# Starting point for x-coordinate starting cell
 a=8
 b=1
-# Starting poit for y-coordinate starting cell
+# Starting point for y-coordinate starting cell
 c=9
 d=1
-# Starting poit for y-coordinate starting cell
+# Starting point for y-coordinate starting cell
 e=6
 f=1
 
@@ -71,16 +110,16 @@ for row in listoutter:
         row.extend([0 for z in xrange((maxLen) - len(row))])
 
 '''
-COMMENT OUT. 
-This used to make multiple inner lists into a single list:
-
+OLD METHOD,
+COMMENT OUT-
+This was used to make multiple inner lists into a single list:
+-----------------------------------------------
 singleList = list(itertools.chain(*listoutter))
 for v in range (len(singleList)-1):
 	#no more than 256 columns allowed for xls, so use xlsb
 	ws.write(v, 0, str(singleList[v]))
 wb.save('new346' + '.xls')
 '''
-
 for r in range(len(listoutter)-1):
 	for col in range (len(listoutter[r])-1):
 		ws.write(r, col, str(listoutter[r][col]))
