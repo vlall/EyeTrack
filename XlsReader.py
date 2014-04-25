@@ -2,10 +2,8 @@ import xlrd
 import xlwt
 import itertools
 
-
 book = xlrd.open_workbook("new.xlsx")
 first_sheet = book.sheet_by_index(0)
-
 '''
 Example cell value we can use:
 cell_value = first_sheet.cell(0,1).value
@@ -41,6 +39,7 @@ for i in range(3):
 		listinner.append(first_sheet.cell(a,b+1).value)
 		listinner.append(first_sheet.cell(c,d+1).value)
 		listinner.append(first_sheet.cell(e,f+1).value) #first_sheet.cell(x,y).value
+
 		y+=1
 		b+=1
 		d+=1
@@ -68,7 +67,6 @@ print (listoutter)
 for j in range (len(listoutter)):
 	print len(listoutter[j])
 
-
 # Section for writing to a new excel file.
 row = 1
 wb = xlwt.Workbook()
@@ -85,13 +83,7 @@ row = row + 1
 '''
 
 singleList = list(itertools.chain(*listoutter))
-
 for v in range (len(singleList)-1):
-	#no more than 256 columns allowed for xls, so use xlsb or Openpyxcel
+	#no more than 256 columns allowed for xls, so use xlsb
 	ws.write(v, 0, str(singleList[v]))
 wb.save('new346' + '.xls')
-
-# Print nested lists' lengths.
-print (listoutter)
-for j in range (len(listoutter)):
-	print len(listoutter[j])
