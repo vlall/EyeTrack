@@ -1,150 +1,56 @@
-import xlrd
-import xlwt
-import itertools
+from pybrain.datasets            import ClassificationDataSet
+from pybrain.utilities           import percentError
+from pybrain.tools.shortcuts     import buildNetwork
+from pybrain.supervised.trainers import BackpropTrainer
+from pybrain.structure.modules   import SoftmaxLayer
+from pybrain.datasets 	         import SupervisedDataSet
+ 
+'''
+Detailed metowrk topology, weights, connections- examined later.
+this function just prints our final data. Move to separate file later.
+'''
+def printConnections(n):
+    for mod in n.modules:
+        for conn in n.connections[mod]:
+            print conn
+            for cc in range(len(conn.params)):
+                print conn.whichBuffers(cc), conn.params[cc]
+
+# Data object (8 inputs, 8 outputs)
+ds = SupervisedDataSet(8,8)
 
 '''
-Average Runtime: 1 minute.
-
-This script will utilize PyExcel to read xls(x) Eyetracker data.
-We will read the data and save it as a list within a list:
-[outterlist [innerlist1],[innerlist2],........[innerlistN] ]
-
-Our neural networks need a vector, but our information is in 3-Dimensions:
-(x-fixation, y-fixation, duration of fixation or-> x,y,t)
-therefore we convert the matrix:
-[ x1 y1 t1 ]
-[ x2 y2 t2 ]
-[ x3 y3 t3 ]
-Into a column vector:
-[ x1 ]
-[ y1 ]
-[ t1 ]
-[ x2 ]
-[ y2 ]
-[ t2 ]
-[ x3 ]
-[ y3 ]
-[ t3 ]
-
-Our NN not only requires 1-dimenesional data, it also needs an EQUAL amount of outputs 
-for every training set. To do this, we will then find the maximum length of a given
-list and replace the lists that do not meet this max with zeros. This will result
-in an equal amount of outputs.
-
------------------------------------
-After reading the data, we will create a new xls(x) spreadsheet that will 
-reorganize and reformat the original data so that it can be read by BackProp.py,
-our PyBrain NN creator.
-
-Please read BackProp.py to find the application of this script in an NN.
-Quick info about BackProp.py:
-I expect the NN to take this and output a classification of WHO is looking at a given
-image using our fixation data. I'll try this with Subject A and Subject B first.
-TODO:
-1) The final value is not printed in the loop (minor)
+Open the data in the csv. Each row is one trial, each column is input or output (depending on network. 
+For this network, the first 8 columns are inputs, second 8 outputs as defined by the above data object.
 '''
+tf = open('my_file.csv','r')
 
-book = xlrd.open_workbook("new.xlsx")
-first_sheet = book.sheet_by_index(0)
-# Section for writing to a new excel file.
-wb = xlwt.Workbook()
-ws = wb.add_sheet('Sheet')
+# Read all info on the csv. 
+for line in tf.readlines():
+    data = [float(x) for x in line.strip().split(',') if x != '']
+    indata =  tuple(data[:8])
+    outdata = tuple(data[8:])
+    ds.addSample(indata,outdata)
 
 '''
-Example cell value we can use:
-cell_value = first_sheet.cell(0,1).value
-(0,1) is Pic001a
-(1,1) is indoor4.png
-
-some useful methods:
-This gives you the number of columns and rows
-print first_sheet.ncols
-print first_sheet.nrows
-ws.write(2, 0, 'asdf')
+Make the actual neural networks
+TOPOLOGY: 8 in, 8 hidden-0, 8 hidden-1, 8 out. Hidden layers subject to change
 '''
-# Nest the list in an outter list to keep all arrays managable
-listoutter=[]
-listinner=[]
-listoutter.append(listinner)
-# Starting point for image name (indoor4.png)
-x=1 
-y=1
-# Starting point for x-coordinate starting cell
-a=8
-b=1
-# Starting point for y-coordinate starting cell
-c=9
-d=1
-# Starting point for y-coordinate starting cell
-e=6
-f=1
-# subject
-g=0
-h=1
-# image type
-j=3
-k=1
-# Loop through and make a 2-d array (x values for each image)
-# 25x(24 minus the 2 mistrials)= 25*23- this gives you the number of images shown. 
-# I did (24*23-1) so i wouldn't go over the index bound (549). I substract another 1 to stop before the final cells
-# Because there's nothing to compare them to.
-for i in range(548):
-	listinner = listoutter[i]
-	listinner.append(first_sheet.cell(a,b).value) #first_sheet.cell(x,y).value
-	listinner.append(first_sheet.cell(c,d).value) #first_sheet.cell(x,y).value
-	listinner.append(first_sheet.cell(e,f).value) #first_sheet.cell(x,y).value
-	while (first_sheet.cell(x,y).value == first_sheet.cell(x,y+1).value):
-		listinner.append(first_sheet.cell(a,b+1).value)
-		listinner.append(first_sheet.cell(c,d+1).value)
-		listinner.append(first_sheet.cell(e,f+1).value) #first_sheet.cell(x,y).value
-		y+=1
-		b+=1
-		d+=1
-		f+=1
-	else:
-		listinner.append(first_sheet.cell(g,h).value)
-		listinner.append(first_sheet.cell(j,k).value)
-		h+=(len(listinner)-1)/3
-		k+=(len(listinner)-1)/3	
-		listoutter.append([])
-		print(len(listinner))
-		y+=1
-		b+=1
-		d+=1
-		f+=1
-# Print nested lists' lengths.
-print (listoutter)
+n = buildNetwork(ds.indim,8,8,ds.outdim,recurrent=True)
 
-# Extend lists to contain the length of the max list. Add 0's to make up for the extra space.
-maxLen = max(map(len, listoutter))
-listoutter.pop()
-for row in listoutter:
-    if len(row) < maxLen:
-    	print ('THIS IS IMPORTANT' + str(row[-1]))
-    	end=row[-1]
-    	end2=row[-2]
-    	row.pop()
-    	row.pop()
-        row.extend([0 for z in xrange((maxLen) - len(row))])
-        row.append(end)
-        row.append(end2)
+#change learningrate based on gradient
+t = BackpropTrainer(n,learningrate=0.01,momentum=0.5,verbose=True)
 
-# This is important to know, it will tell us the amount of inputs we will use in the NN.
-# Once we know this, we will work on a topolopy in BackProp.py
-print(maxLen)
+# 100 iterations
+t.trainOnDataset(ds,100)
+t.testOnData(verbose=True)
 
-'''
-OLD METHOD, COMMENT OUT- 
-I'm only leaving this in here because it might at some point becomes useful.
-This was used to make multiple inner lists into a single list:
------------------------------------------------
-singleList = list(itertools.chain(*listoutter))
-for v in range (len(singleList)-1):
-	#no more than 256 columns allowed for xls, so use xlsb
-	ws.write(v, 0, str(singleList[v]))
-wb.save('new346' + '.xls')
-'''
-for r in range(len(listoutter)):
-	for col in range (len(listoutter[r])):
-		ws.write(r, col, str(listoutter[r][col]))
-wb.save('new346' + '.xls')
+# Our prediction given 8 inputs, will print 8 estimated outputs
+guess = n.activate((1,2,3,4,5,6,7,8)) 
+print 'Final weights:',n.params
+
+# Print our Guess 
+print '\nGUESS???' + str(guess)
+
+#print n['in'], n['out'], n[h0], n['h1']
+print (printConnections(n))
