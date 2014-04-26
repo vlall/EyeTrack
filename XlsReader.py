@@ -1,7 +1,6 @@
 import xlrd
 import xlwt
 import itertools
-
 '''
 Average Runtime: 1 minute.
 
@@ -55,7 +54,6 @@ Example cell value we can use:
 cell_value = first_sheet.cell(0,1).value
 (0,1) is Pic001a
 (1,1) is indoor4.png
-
 some useful methods:
 This gives you the number of columns and rows
 print first_sheet.ncols
@@ -171,15 +169,15 @@ for row in listoutter:
     		end=22
     	end2=row[-1]
     	if (end2=='FACE'):
-			end2=1
+		end2=1
     	elif (end2=='OUTDOOR'):
-			end2=2
+		end2=2
     	elif (end2=='INDOOR'):
-			end2=3
+		end2=3
     	elif (end2=='OBJECT'):
-			end2=4
+		end2=4
     	elif (end2=='MANIP'):
-			end2=5
+		end2=5
     	row.pop()
     	row.pop()
         row.extend([0.0 for z in xrange((maxLen) - len(row))])
