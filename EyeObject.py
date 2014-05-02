@@ -176,7 +176,7 @@ class ReadExcel:
             	elif (end=='PICT023c'):
                     end=21
             	elif (end=='PICT024d'):  
-            		end=22
+                    end=22
             	end2=row[-1]
             	if (end2=='FACE'):
                     end2=1
