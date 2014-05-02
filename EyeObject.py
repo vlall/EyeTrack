@@ -2,6 +2,7 @@ import xlrd
 import xlwt
 import itertools
 import csv
+
 class ReadExcel:
     listoutter=[]
     listinner=[]
@@ -75,7 +76,7 @@ class ReadExcel:
         		h+=(len(listinner)-1)/3
         		k+=(len(listinner)-1)/3	
         		listoutter.append([])
-        		print(len(listinner))
+        		print( "Array %s has an original length of %s" % (i+1, len(listinner)))
         		y+=1
         		b+=1
         		d+=1
@@ -86,7 +87,7 @@ class ReadExcel:
         listoutter.pop()
         for row in listoutter:
             if len(row) < maxLen:
-            	print ('IMPORTANT: ' + str(row[-1]))
+            	#print ('IMPORTANT: ' + str(row[-1]))
             	end=row[-2]
             	#The NN requires NUMERICAL outputs. Therefore, we convert the strings to numbers.
             	if (end=='PICT001a'):
@@ -154,8 +155,6 @@ class ReadExcel:
 
 # This is important to know, it will tell us the amount of inputs we will use in the NN.
 # Once we know this, we will work on a topolopy in BackProp.py
-    def maxLength(self):
-        return (maxLen)
 
     def printOutter(self):
         self.listoutter=listoutter 
@@ -207,16 +206,34 @@ class ReadExcel:
         wb.save(str(filenameOut) + '.xls')
         print ("File %s was successfully saved as a float in file %s" % (filenameIn, filenameOut))
 
-    def ObjectInfo(self,indexNum):
-        return ("{Name: %s, Sheet: %s, Extension: %s, Type: %s}" % (self.get_Name(), self.get_Sheet(), self.get_Ext(), self.get_Type(indexNum)))
+    def object_Info(self,indexNum):
+        end2=self.get_Type(indexNum)
+        if (end2=='1'):
+            end2='FACE'
+        elif (end2=='2'):
+            end2='OUTDOOR'
+        elif (end2=='3'):
+            end2='INDOOR'
+        elif (end2=='4'):
+            end2='OBJECT'
+        elif (end2=='5'):
+            end2='MANIP'
+        return ("{\n\tFile Name:\n\t\t %s.%s, \n\tSheet:\n\t\t %s, \n\tType: %s, \n\tArray Length:\n\t\t %s, \n\tParent Array:\n\t\t %s \n}" % (self.get_Name(), self.get_Ext(), self.get_Sheet(), end2, len(self.get_Inner(indexNum)), (self.get_Inner(indexNum))))
+
+    def make_Text(self, filename, indexNum, ext='txt'):
+        text_file = open("%s.%s" % (filename,ext), "w")
+        text_file.write(self.object_Info(indexNum))
+        text_file.close()
+        print ('\nWrote to File %s.%s.' % (filename,ext))
 
 if __name__ == '__main__':
     EyeTrack = ReadExcel("new")
     EyeTrack.format_Array()
     EyeTrack.write_Array("EyeWrite")
-    print EyeTrack.ObjectInfo(3)
+    print EyeTrack.object_Info(3)
     EyeTrack.write_Array('EyeWrite2')
     #EyeTrack.convert_Float("EyeWrite2")
     EyeTrack.csv_from_excel("EyeWrite2")
+    EyeTrack.make_Text('output',3)
 
 
