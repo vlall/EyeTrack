@@ -2,7 +2,7 @@ import xlrd
 import xlwt
 import itertools
 
-class ReadExcel:
+class EyeObject:
     listoutter=[]
     listinner=[]
     listoutter.append(listinner)
