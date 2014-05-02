@@ -3,33 +3,54 @@ import xlwt
 import itertools
 
 class ReadExcel:
+    listoutter=[]
+    listinner=[]
+    listoutter.append(listinner)
+    # Starting point for image name (indoor4.png)
+    x=1 
+    y=1
+    # Starting point for x-coordinate starting cell
+    a=8
+    b=1
+    # Starting point for y-coordinate starting cell
+    c=9
+    d=1
+    # Starting point for y-coordinate starting cell
+    e=6
+    f=1
+    # subject
+    g=0
+    h=1
+    # image type
+    j=3
+    k=1
 
     def __init__(self, filename, ext="xlsx", sheet=0):
         self.filename = filename
         self.ext = ext
         self.sheet = sheet
-        book = xlrd.open_workbook(filename + "." + ext)
-        new_sheet = book.sheet_by_index(sheet)
-        startingPoint()
-
-    def starting_Point (self, x=1,y=1,a=8,b=1,c=9,d=1,e=6,f=1,g=0,h=1,j=3,k=1):
-        self.x=x
-        self.y=y
-        self.a=a
-        self.b=b
-        self.c=c
-        self.d=d
-        self.e=e
-        self.f=f
-        self.g=g
-        self.h=g
-        self.j=j
-        self.k=k
+        book = xlrd.open_workbook(str(filename) + "." + str(ext))
+        self.first_sheet = book.sheet_by_index(sheet)
 
     def sizeArray (self, images=25, trials=24, mistrials=2):
-        stating_point()
-        dimensions= images * ((trials-mistrials)-1)-1)
-        for i in range ()
+        listoutter=self.listoutter
+        listinner=self.listinner
+        first_sheet=self.first_sheet
+        x=self.x
+        y=self.y
+        a=self.a
+        b=self.b
+        c=self.c
+        d=self.d
+        e=self.e
+        f=self.f
+        g=self.g
+        h=self.g
+        j=self.j
+        k=self.k
+
+        dimensions= 548#images * ((trials-mistrials)-1)-1))
+
         # Loop through and make a 2-d array (x values for each image)
         # 25x(24 minus the 2 mistrials)= 25*23- this gives you the number of images shown. 
         # I did (24*23-1) so i wouldn't go over the index bound (549). I substract another 1 to stop before the final cells
@@ -150,5 +171,12 @@ class ReadExcel:
     def get_Name (self):
         return self.filename
 
-x = ReadExcel("my_file")
-x.sizeArray()
+    def write_Array (self, filename, ext=xls):
+        for r in range(len(self.listoutter)):
+            for col in range (len(self.listoutter[r])):
+                ws.write(r, col, str(self.listoutter[r][col]))
+        wb.save(str(filename) + str(ext))
+
+EyeTrack = ReadExcel("new")
+EyeTrack.sizeArray()
+
