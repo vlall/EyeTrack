@@ -137,7 +137,7 @@ class ReadExcel:
             		end=2
             	elif (end=='PICT003c'):
             		end=3
-            	#elif (end=='PICT004d'):
+        		#elif (end=='PICT004d'):
             	elif (end=='PICT005a'):
             		end=4
             	elif (end=='PICT006b'):
@@ -172,22 +172,22 @@ class ReadExcel:
             	elif (end=='PICT021a'):
             		end=19
             	elif (end=='PICT022b'):
-            		end=20
+                    end=20
             	elif (end=='PICT023c'):
-            		end=21
+                    end=21
             	elif (end=='PICT024d'):  
             		end=22
             	end2=row[-1]
             	if (end2=='FACE'):
-        			end2=1
+                    end2=1
             	elif (end2=='OUTDOOR'):
-        			end2=2
+                    end2=2
             	elif (end2=='INDOOR'):
-        			end2=3
+                    end2=3
             	elif (end2=='OBJECT'):
-        			end2=4
+                    end2=4
             	elif (end2=='MANIP'):
-        			end2=5
+                    end2=5
             	row.pop()
             	row.pop()
                 row.extend([0.0 for z in xrange((maxLen) - len(row))])
