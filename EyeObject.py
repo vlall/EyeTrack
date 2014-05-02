@@ -3,7 +3,48 @@ import xlwt
 import itertools
 import csv
 
+'''
+This script will utilize PyExcel to read xls(x) Eyetracker data.
+We will read the data and save it as a list within a list:
+[outterlist [innerlist1],[innerlist2],........[innerlistN] ]
+
+Our neural networks need a vector, but our information is in 3-Dimensions:
+(x-fixation, y-fixation, duration of fixation or-> x,y,t)
+therefore we convert the matrix:
+[ x1 y1 t1 ]
+[ x2 y2 t2 ]
+[ x3 y3 t3 ]
+Into a column vector:
+[ x1 ]
+[ y1 ]
+[ t1 ]
+[ x2 ]
+[ y2 ]
+[ t2 ]
+[ x3 ]
+[ y3 ]
+[ t3 ]
+
+Our NN not only requires 1-dimenesional data, it also needs an EQUAL amount of outputs 
+for every training set. To do this, we will then find the maximum length of a given
+list and replace the lists that do not meet this max with zeros. This will result
+in an equal amount of outputs.
+
+-----------------------------------
+After reading the data, we will create a new xls(x) spreadsheet that will 
+reorganize and reformat the original data so that it can be read by BackProp.py,
+our PyBrain NN creator.
+
+Please read BackProp.py to find the application of this script in an NN.
+Quick info about BackProp.py:
+I expect the NN to take this and output a classification of WHO is looking at a given
+image using our fixation data. I'll try this with Subject A and Subject B first.
+TODO:
+1) Max Array(#9) is NOT converted properly.
+'''
+
 class ReadExcel:
+
     listoutter=[]
     listinner=[]
     listoutter.append(listinner)
@@ -96,7 +137,7 @@ class ReadExcel:
             		end=2
             	elif (end=='PICT003c'):
             		end=3
-        		#elif (end=='PICT004d'):
+            	#elif (end=='PICT004d'):
             	elif (end=='PICT005a'):
             		end=4
             	elif (end=='PICT006b'):
@@ -224,7 +265,7 @@ class ReadExcel:
         text_file = open("%s.%s" % (filename,ext), "w")
         text_file.write(self.object_Info(indexNum))
         text_file.close()
-        print ('\nWrote to File %s.%s.' % (filename,ext))
+        print ('\nWrote to file %s.%s.' % (filename,ext))
 
 if __name__ == '__main__':
     EyeTrack = ReadExcel("new")
