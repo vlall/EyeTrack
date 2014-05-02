@@ -1,8 +1,8 @@
 import xlrd
 import xlwt
 import itertools
-
-class EyeObject:
+import csv
+class ReadExcel:
     listoutter=[]
     listinner=[]
     listoutter.append(listinner)
@@ -29,10 +29,11 @@ class EyeObject:
         self.filename = filename
         self.ext = ext
         self.sheet = sheet
-        book = xlrd.open_workbook(str(filename) + "." + str(ext))
+        book = xlrd.open_workbook("%s.%s" % (filename, ext))
         self.first_sheet = book.sheet_by_index(sheet)
+        print self.first_sheet
 
-    def sizeArray (self, images=25, trials=24, mistrials=2):
+    def format_Array (self, images=25, trials=24, mistrials=2):
         listoutter=self.listoutter
         listinner=self.listinner
         first_sheet=self.first_sheet
@@ -157,10 +158,11 @@ class EyeObject:
         return (maxLen)
 
     def printOutter(self):
-        self.outter=outter 
+        self.listoutter=listoutter 
     
-    def print_Inner(self, indexNum):
-        self.index=index
+    def get_Inner(self, indexNum):
+        self.index=indexNum
+        return self.listoutter[indexNum]
 
     def get_Sheet (self):
         return self.sheet
@@ -171,12 +173,49 @@ class EyeObject:
     def get_Name (self):
         return self.filename
 
-    def write_Array (self, filename, ext=xls):
+    def get_Type(self,indexNum):
+        self.index=indexNum
+        row = self.listoutter[indexNum]
+        return ('IMPORTANT: ' + str(row[-1]))
+
+    def write_Array (self, filename, ext="xls"):
+        wb = xlwt.Workbook()
+        ws = wb.add_sheet('Sheet')
         for r in range(len(self.listoutter)):
             for col in range (len(self.listoutter[r])):
                 ws.write(r, col, str(self.listoutter[r][col]))
-        wb.save(str(filename) + str(ext))
+        wb.save("%s.%s" %(filename, ext))
 
-EyeTrack = ReadExcel("new")
-EyeTrack.sizeArray()
+    def csv_from_excel(self, filename, ext="xls"):
+        wb = xlrd.open_workbook('%s.%s' %(filename,ext))
+        sh = wb.sheet_by_name('Sheet')
+        your_csv_file = open('your_csv_file.csv', 'wb')
+        wr = csv.writer(your_csv_file, quoting=csv.QUOTE_ALL)
+        for rownum in xrange(sh.nrows):
+            wr.writerow(sh.row_values(rownum))
+        your_csv_file.close()
+
+    def convert_Float(self, filenameIn, filenameOut="Floatfile", sheet=0):
+        book = xlrd.open_workbook("%s.xls" % filenameIn)
+        first_sheet = book.sheet_by_index(sheet)
+        # Section for writing to a new excel file.
+        wb = xlwt.Workbook()
+        ws = wb.add_sheet('Sheet')
+        for i in range(first_sheet.ncols-1):
+            for j in range(first_sheet.nrows-1):
+                ws.write(j, i, str(float(first_sheet.cell(j,i).value)))
+        wb.save(str(filenameOut) + '.xls')
+        print ("File %s was successfully saved as a float in file %s", (filenameIn, filenameOut))
+
+if __name__ == '__main__':
+    EyeTrack = ReadExcel("new")
+    EyeTrack.format_Array()
+    EyeTrack.write_Array("EyeWrite")
+    print EyeTrack.get_Inner(4)
+    print EyeTrack.get_Name()
+    print EyeTrack.get_Sheet()
+    EyeTrack.write_Array('EyeWrite2')
+    #EyeTrack.convert_Float("EyeWrite2")
+    EyeTrack.csv_from_excel("EyeWrite2")
+
 
