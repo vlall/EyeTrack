@@ -2,7 +2,6 @@ import xlrd
 import xlwt
 import itertools
 import csv
-
 class ReadExcel:
     listoutter=[]
     listinner=[]
@@ -177,7 +176,7 @@ class ReadExcel:
     def get_Type(self,indexNum):
         self.index=indexNum
         row = self.listoutter[indexNum]
-        return ('IMPORTANT: ' + str(row[-1]))
+        return (str(row[-1]))
 
     def write_Array (self, filename, ext="xls"):
         wb = xlwt.Workbook()
@@ -206,15 +205,16 @@ class ReadExcel:
             for j in range(first_sheet.nrows-1):
                 ws.write(j, i, str(float(first_sheet.cell(j,i).value)))
         wb.save(str(filenameOut) + '.xls')
-        print ("File %s was successfully saved as a float in file %s", (filenameIn, filenameOut))
+        print ("File %s was successfully saved as a float in file %s" % (filenameIn, filenameOut))
+
+    def ObjectInfo(self,indexNum):
+        return ("{Name: %s, Sheet: %s, Extension: %s, Type: %s}" % (self.get_Name(), self.get_Sheet(), self.get_Ext(), self.get_Type(indexNum)))
 
 if __name__ == '__main__':
     EyeTrack = ReadExcel("new")
     EyeTrack.format_Array()
     EyeTrack.write_Array("EyeWrite")
-    print EyeTrack.get_Inner(4)
-    print EyeTrack.get_Name()
-    print EyeTrack.get_Sheet()
+    print EyeTrack.ObjectInfo(3)
     EyeTrack.write_Array('EyeWrite2')
     #EyeTrack.convert_Float("EyeWrite2")
     EyeTrack.csv_from_excel("EyeWrite2")
