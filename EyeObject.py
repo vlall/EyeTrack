@@ -2,6 +2,7 @@ import xlrd
 import xlwt
 import itertools
 import csv
+
 class ReadExcel:
     listoutter=[]
     listinner=[]
@@ -31,7 +32,7 @@ class ReadExcel:
         self.sheet = sheet
         book = xlrd.open_workbook("%s.%s" % (filename, ext))
         self.first_sheet = book.sheet_by_index(sheet)
-        print self.first_sheet
+        #print self.first_sheet #(note, gives a reference)
 
     def format_Array (self, images=25, trials=24, mistrials=2):
         listoutter=self.listoutter
@@ -50,7 +51,7 @@ class ReadExcel:
         j=self.j
         k=self.k
 
-        dimensions= 548#images * ((trials-mistrials)-1)-1))
+        dimensions = images * ((trials-mistrials)-1)-1
 
         # Loop through and make a 2-d array (x values for each image)
         # 25x(24 minus the 2 mistrials)= 25*23- this gives you the number of images shown. 
