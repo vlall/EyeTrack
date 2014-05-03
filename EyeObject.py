@@ -5,7 +5,7 @@ import csv
 
 '''
 This script will utilize PyExcel to read xls(x) Eyetracker data.
-We will read the data and save it as a list within a list:
+We will read the data and save it as a 2-D Array (a list within a list):
 [outterlist [innerlist1],[innerlist2],........[innerlistN] ]
 
 Our neural networks need a vector, but our information is in 3-Dimensions:
