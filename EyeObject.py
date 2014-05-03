@@ -5,7 +5,7 @@ import csv
 
 '''
 This script will utilize PyExcel to read xls(x) Eyetracker data.
-We will read the data and save it as a 2-D Array (a list within a list):
+We will read the data and save it as a list within a list:
 [outterlist [innerlist1],[innerlist2],........[innerlistN] ]
 
 Our neural networks need a vector, but our information is in 3-Dimensions:
@@ -88,7 +88,7 @@ class ReadExcel:
         e=self.e
         f=self.f
         g=self.g
-        h=self.g
+        h=self.h
         j=self.j
         k=self.k
 
@@ -127,7 +127,7 @@ class ReadExcel:
         maxLen = max(map(len, listoutter))
         listoutter.pop()
         for row in listoutter:
-            if len(row) < maxLen:
+            if len(row) <= maxLen:
                 #print ('IMPORTANT: ' + str(row[-1]))
                 end=row[-2]
                 #The NN requires NUMERICAL outputs. Therefore, we convert the strings to numbers.
@@ -245,7 +245,7 @@ class ReadExcel:
             for j in range(first_sheet.nrows-1):
                 ws.write(j, i, str(float(first_sheet.cell(j,i).value)))
         wb.save(str(filenameOut) + '.xls')
-        print ("File %s was successfully saved as a float in file %s" % (filenameIn, filenameOut))
+        print ("\n%s.xls was successfully converted to a float in %s.xls" % (filenameIn, filenameOut))
 
     def object_Info(self,indexNum):
         end2=self.get_Type(indexNum)
@@ -275,6 +275,5 @@ if __name__ == '__main__':
     EyeTrack.write_Array('EyeWrite2')
     #EyeTrack.convert_Float("EyeWrite2")
     EyeTrack.csv_from_excel("EyeWrite2")
+    EyeTrack.convert_Float('EyeWrite2')
     EyeTrack.make_Text('output',3)
-
-
